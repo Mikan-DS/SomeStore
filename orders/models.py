@@ -6,11 +6,19 @@ class Order(models.Model):
     saved_date = models.DateTimeField(null=True, blank=True, verbose_name='Дата сохранения')
 
     def __str__(self):
-        return f"Заказ: {self.user} {self.saved_date}"
+        return f"Заказ #{self.id}: {self.user} {self.saved_date}"
 
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
+
+    def get_status(self):
+        reviewed_order = ReviewedOrder.objects.filter(order=self).first()
+        if reviewed_order is None:
+            return 'На рассмотрении'
+        else:
+            return reviewed_order.get_status()
+
 class Product(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='products', verbose_name='В заказе')
     url = models.URLField(verbose_name='URL страницы')
@@ -24,7 +32,8 @@ class Product(models.Model):
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} - {self.price}"
+
 class ReviewedOrder(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='reviewed_order', verbose_name='Заказ')
     admin_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='Администратор')
@@ -33,11 +42,9 @@ class ReviewedOrder(models.Model):
 
     def get_status(self):
         if self.rejection_reason is None:
-            return 'Принят'
-        elif self.rejection_reason == '':
-            return 'Отказ'
+            return 'Принято'
         else:
-            return f'Отказано по причине: {self.rejection_reason}'
+            return 'Отказано'
 
     def __str__(self):
         return str(self.order)
