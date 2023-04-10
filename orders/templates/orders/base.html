@@ -5,23 +5,24 @@
     <meta charset="UTF-8">
     <title>Хороший Магазин</title>
     <link rel="stylesheet" href="{% static 'orders/css/styles.css' %}">
+
     {% block head %}
 
     {% endblock %}
 </head>
 <body>
     <header class="header">
-        <div class="header__logo">
+        <a class="header__logo" href="{% url 'index' %}">
             <img src="{% static 'orders/img/logo.png' %}" alt="Логотип Хороший Магазин">
             <h1 class="header__title">Хороший Магазин</h1>
-        </div>
+        </a>
         <div class="header__user">
             {% if user.is_authenticated %}
                 <p class="header__user-fullname">{{ user.get_initials }}</p>
             {% else %}
-                <a href="{% url 'login' %}" class="button">Войти</a>
+                <a href="{% url 'login' %}" class="button expand_button">Войти</a>
             {% endif %}
-            <a href="{% url 'cart' %}" class="header__cart">
+            <a href="{% url 'cart' %}" class="header__cart expand_button">
                 <img src="{% static 'orders/img/cart.png' %}" alt="Корзина">
             </a>
         </div>
@@ -39,4 +40,5 @@
         <p class="footer__text">© Хороший Магазин, 2023</p>
     </footer>
 </body>
+<script src="{% static 'orders/js/scripts.js' %}"></script>
 </html>

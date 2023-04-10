@@ -1,32 +1,28 @@
 {% extends 'orders/base.html' %}
-
 {% load static %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'orders/css/index.css' %}">
 {% endblock %}
 
-
 {% block content %}
     {% if user.is_authenticated %}
         {% if user.is_staff %}
             <h1>Добро пожаловать! Хорошей работы</h1>
             <div class="buttons">
-                <a href="{% url 'moderate_orders' %}" class="button">Модерировать заказы</a>
-                <a href="{% url 'archive_orders' %}" class="button">Заказы в архиве</a>
-                <a href="{% url 'orders' %}" class="button">Все заказы</a>
+                <a href="{% url 'moderate_orders' %}" class="button lst_button expand_button">Модерировать заказы</a>
+                <a href="{% url 'archive_orders' %}" class="button lst_button expand_button">Заказы в архиве</a>
+                <a href="{% url 'orders' %}" class="button lst_button">Все заказы</a>
             </div>
         {% else %}
             <h1>Добро пожаловать! Хороших покупок!</h1>
             <div class="buttons">
-                <a href="{% url 'my_orders' %}" class="button">Мои заказы</a>
-                <a href="#" class="button">Корзина</a>
+                <a href="{% url 'my_orders' %}" class="button lst_button expand_button">Мои заказы</a>
+                <a href="#" class="button lst_button expand_button">Корзина</a>
             </div>
         {% endif %}
     {% else %}
         <h1>Это шаблон сайта для работы с различными интернет магазинами</h1>
-        <a href="{% url 'login' %}" class="button">Войдите в систему для продолжения</a>
+        <a href="{% url 'login' %}" class="button lst_button expand_button">Войдите в систему для продолжения</a>
     {% endif %}
-
-    <script src="{% static 'orders/js/index.js' %}"></script>
 {% endblock %}

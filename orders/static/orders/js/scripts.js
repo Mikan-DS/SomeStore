@@ -1,7 +1,6 @@
 // Добавление анимации для кнопок при наведении
-const buttons = document.querySelectorAll('.button');
-console.log(buttons)
-buttons.forEach(button => {
+const expand_buttons = document.querySelectorAll('.expand_button');
+expand_buttons.forEach(button => {
     button.addEventListener('mouseover', () => {
         button.style.transform = 'scale(1.03)';
     });
