@@ -4,12 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Хороший Магазин</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'orders/css/styles.css' %}">
+    {% block head %}
+
+    {% endblock %}
 </head>
 <body>
     <header class="header">
         <div class="header__logo">
-            <img src="{% static 'img/logo.png' %}" alt="Логотип Хороший Магазин">
+            <img src="{% static 'orders/img/logo.png' %}" alt="Логотип Хороший Магазин">
             <h1 class="header__title">Хороший Магазин</h1>
         </div>
         <div class="header__user">
@@ -19,7 +22,7 @@
                 <a href="{% url 'login' %}" class="button">Войти</a>
             {% endif %}
             <a href="{% url 'cart' %}" class="header__cart">
-                <img src="{% static 'img/cart.png' %}" alt="Корзина">
+                <img src="{% static 'orders/img/cart.png' %}" alt="Корзина">
             </a>
         </div>
     </header>
@@ -33,7 +36,7 @@
             <p class="footer__phone-number">+7 999 123-45-67</p>
             <a href="<https://github.com/>" class="footer__link">GitHub</a>
         </div>
-        <p class="footer__text">© Хороший Магазин, 2021</p>
+        <p class="footer__text">© Хороший Магазин, 2023</p>
     </footer>
 </body>
 </html>

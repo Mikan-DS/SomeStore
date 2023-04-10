@@ -1,5 +1,12 @@
 {% extends 'orders/base.html' %}
 
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'orders/css/index.css' %}">
+{% endblock %}
+
+
 {% block content %}
     {% if user.is_authenticated %}
         {% if user.is_staff %}
@@ -20,48 +27,6 @@
         <h1>Это шаблон сайта для работы с различными интернет магазинами</h1>
         <a href="{% url 'login' %}" class="button">Войдите в систему для продолжения</a>
     {% endif %}
+
+    <script src="{% static 'orders/js/index.js' %}"></script>
 {% endblock %}
-
-<style>
-  .button {
-    display: inline-block;
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    transition-duration: 0.4s;
-    cursor: pointer;
-  }
-
-  .button:hover {
-    background-color: #008CBA;
-    color: white;
-  }
-
-  .buttons {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-</style>
-
-<script>
-  // Добавление анимации для кнопок при наведении
-  const buttons = document.querySelectorAll('.button');
-
-  buttons.forEach(button => {
-    button.addEventListener('mouseover', () => {
-      button.style.transform = 'scale(1.1)';
-    });
-
-    button.addEventListener('mouseout', () => {
-      button.style.transform = 'scale(1)';
-    });
-  });
-
-</script>
