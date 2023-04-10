@@ -1,0 +1,102 @@
+/* Общие стили */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #333;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+h1, h2, p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Шапка сайта */
+.header {
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.header__logo {
+    display: flex;
+    align-items: center;
+}
+
+.header__logo img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.header__title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.header__user {
+    display: flex;
+    align-items: center;
+}
+
+.header__user-fullname {
+    margin-right: 20px;
+}
+
+.header__cart {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.header__cart img {
+    width: 30px;
+    height: 30px;
+}
+
+/* Основной контент сайта */
+.main {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+/* Подвал сайта */
+.footer {
+    background-color: #222;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.footer__contacts {
+    display: flex;
+    align-items: center;
+}
+
+.footer__phone-number {
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+.footer__link {
+    margin-right: 20px;
+}
+
+.footer__text {
+    margin-left: auto;
+}

@@ -1,6 +1,7 @@
 from django.db import models
 from users.models import CustomUser
 
+
 class Order(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Клиент")
     saved_date = models.DateTimeField(null=True, blank=True, verbose_name='Дата сохранения')
@@ -19,6 +20,7 @@ class Order(models.Model):
         else:
             return reviewed_order.get_status()
 
+
 class Product(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='products', verbose_name='В заказе')
     url = models.URLField(verbose_name='URL страницы')
@@ -31,8 +33,10 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
+
     def __str__(self):
         return f"{self.name} - {self.price}"
+
 
 class ReviewedOrder(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='reviewed_order', verbose_name='Заказ')
