@@ -1,7 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.urls import reverse
+
 from .forms import CustomUserCreationForm
+
+def logout_view(request):
+    logout(request)
+    return redirect(reverse('index'))
 
 def user_login(request):
     if request.method == 'POST':
@@ -32,7 +38,4 @@ def under_construction(request, *args, **kwargs):
     return render(request, 'orders/under_construction.html')
 
 def index(request):
-    context = {
-        # Здесь можно добавить данные, которые будут переданы в шаблон
-    }
-    return render(request, 'orders/index.html', context)
+    return render(request, 'orders/index.html')
