@@ -15,6 +15,7 @@ class CustomUserCreationForm(UserCreationForm):
     phone_number = forms.CharField(validators=[phone_regex], max_length=20, label=_('Номер телефона'))
 
     class Meta(UserCreationForm.Meta):
+        model = CustomUser
         fields = UserCreationForm.Meta.fields + ('full_name', 'email', 'phone_number')
 
     def clean_email(self):
