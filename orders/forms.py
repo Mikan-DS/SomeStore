@@ -1,25 +1,27 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
-
 from django.core.validators import EmailValidator, RegexValidator
+from django.contrib.auth import get_user_model
 
+CustomUser = get_user_model()
 
 class CustomUserCreationForm(UserCreationForm):
     full_name = forms.CharField(max_length=255, label=_('ФИО'))
     email = forms.EmailField(label=_('Электронная почта'), validators=[EmailValidator()])
     phone_regex = RegexValidator(
-        regex=r'^\\+?[0-9]{1,3}\\s?\\(?[0-9]{3}\\)?[-.\\s]?[0-9]{3}[-.\\s]?[0-9]{4}$',
-        message=_("Номер телефона должен быть в формате: '+999 (999) 999-9999'."))
+        regex=r'^\+?[78][-\\(]?\d{3}\)?-?\d{3}-?\d{2}-?\d{2}$',
+        message=_("Номер телефона (РФ) должен быть в формате: '+7(999)999-9999'."))
     phone_number = forms.CharField(validators=[phone_regex], max_length=20, label=_('Номер телефона'))
 
     class Meta(UserCreationForm.Meta):
         fields = UserCreationForm.Meta.fields + ('full_name', 'email', 'phone_number')
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['password1'].label = _('Пароль')
-        self.fields['password2'].label = _('Повторите пароль')
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if CustomUser.objects.filter(email=email).exists():
+            raise forms.ValidationError('Пользователь с таким адресом электронной почты уже существует.')
+        return email
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -29,8 +31,3 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
-
-
-class CustomUserForm(CustomUserCreationForm):
-    class Meta(CustomUserCreationForm.Meta):
-        fields = CustomUserCreationForm.Meta.fields + ('is_active',)
