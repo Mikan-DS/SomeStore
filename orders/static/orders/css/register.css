@@ -1,0 +1,45 @@
+/* styles for registration form */
+
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.form-group label {
+    color: #4d4d4d;
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.form-control {
+    background: #f3f3f3;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    height: 34px;
+    padding-left: 10px;
+}
+
+.form-control:focus {
+    background: #fff;
+    box-shadow: none;
+}
+
+.btn {
+    background: #4d4d4d;
+    border: none;
+    border-radius: 0;
+    color: #fff;
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    height: 40px;
+    line-height: 40px;
+    margin: 10px 0;
+    text-align: center;
+    text-transform: uppercase;
+    width: 100%;
+}
