@@ -1,9 +1,55 @@
-from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
+from django.utils import timezone
 
 from .forms import CustomUserCreationForm
+
+from django.contrib.auth.decorators import login_required
+from .models import Order, Product
+from .forms import ProductForm
+
+@login_required
+def cart(request):
+    order, created = Order.objects.get_or_create(user=request.user, saved_date=None)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.order = order
+            product.save()
+            messages.success(request, 'Товар успешно добавлен в корзину!')
+            return redirect('cart')
+        elif request.POST.get("url") and len(request.POST.get("url"))>199:
+            messages.error(request, 'Ссылка на товар слишком длинная')
+        else:
+            messages.error(request, 'Произошла ошибка при добавлении. Проверьте поля')
+            form.add_error(None, 'Произошла ошибка при добавлении. Проверьте поля')
+    else:
+        form = ProductForm()
+    context = {
+        'products': order.products.all(),
+        'form': form,
+    }
+    return render(request, 'orders/cart.html', context)
+
+@login_required
+def remove_from_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    product.delete()
+    return redirect('cart')
+
+@login_required
+def place_order(request):
+    order = Order.objects.filter(user=request.user, saved_date=None).first()
+    if order is None or order.products.count() == 0:
+        return redirect('cart')
+    order.saved_date = timezone.now()
+    order.save()
+    return redirect('index')
+
 
 def logout_view(request):
     logout(request)

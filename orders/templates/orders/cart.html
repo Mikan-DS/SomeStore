@@ -1,0 +1,108 @@
+{% extends 'orders/base.html' %}
+
+{% block content %}
+  <h1>Корзина</h1>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="url">URL страницы:</label>
+      {{ form.url }}
+      {% if form.url.errors %}
+        <ul class="errorlist">
+          {% for error in form.url.errors %}
+            <li class="text-danger">{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    <div class="form-group">
+      <label for="name">Наименование:</label>
+      {{ form.name }}
+      {% if form.name.errors %}
+        <ul class="errorlist">
+          {% for error in form.name.errors %}
+            <li class="text-danger">{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    <div class="form-group">
+      <label for="photo">Фото:</label>
+      {{ form.photo }}
+      {% if form.photo.errors %}
+        <ul class="errorlist">
+          {% for error in form.photo.errors %}
+            <li class="text-danger">{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    <div class="form-group">
+      <label for="price">Цена:</label>
+      {{ form.price }}
+      {% if form.price.errors %}
+        <ul class="errorlist">
+          {% for error in form.price.errors %}
+            <li class="text-danger">{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    <div class="form-group">
+      <label for="position_number">Номер позиции:</label>
+      {{ form.position_number }}
+      {% if form.position_number.errors %}
+        <ul class="errorlist">
+          {% for error in form.position_number.errors %}
+            <li class="text-danger">{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    <div class="form-group">
+      <label for="quantity">Количество:</label>
+      {{ form.quantity }}
+      {% if form.quantity.errors %}
+        <ul class="errorlist">
+          {% for error in form.quantity.errors %}
+            <li class="text-danger">{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    <button type="submit" class="btn btn-primary">Добавить товар</button>
+  </form>
+  <hr>
+  {% if products %}
+    {% for product in products %}
+      <div class="card mb-3">
+        {% if product.photo %}
+          <img class="card-img-top" src="{{ product.photo.url }}" alt="{{ product.name }}">
+        {% else %}
+          <div class="card-img-top placeholder"></div>
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ product.name }}</h5>
+          <p class="card-text">Наименование: {{ product.name }}</p>
+          <p class="card-text">Цена: {{ product.price }} ₽</p>
+          <p class="card-text">Номер позиции: {{ product.position_number }}</p>
+          <form method="POST" action="{% url 'remove_from_cart' product.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Удалить</button>
+          </form>
+          <a href="{{ product.url }}" target="_blank" class="btn btn-primary mt-2">Перейти по ссылке</a>
+        </div>
+      </div>
+    {% endfor %}
+    <form method="POST" action="{% url 'place_order' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="order_comment">Комментарий к заказу:</label>
+        <textarea name="order_comment" id="order_comment" class="form-control"></textarea>
+      </div>
+      <button type="submit" class="btn btn-success">Оформить заказ</button>
+    </form>
+  {% else %}
+    <p>Корзина пуста</p>
+  {% endif %}
+{% endblock %}

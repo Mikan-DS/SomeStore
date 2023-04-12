@@ -19,7 +19,7 @@
             <h1>Добро пожаловать! Хороших покупок!</h1>
             <div class="buttons">
                 <a href="{% url 'my_orders' %}" class="button lst_button expand_button">Мои заказы</a>
-                <a href="#" class="button lst_button expand_button">Корзина</a>
+                <a href="{% url 'cart' %}" class="button lst_button expand_button">Корзина</a>
             </div>
         {% endif %}
     {% else %}

@@ -4,6 +4,8 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import EmailValidator, RegexValidator
 from django.contrib.auth import get_user_model
 
+from orders.models import Product
+
 CustomUser = get_user_model()
 
 class CustomUserCreationForm(UserCreationForm):
@@ -32,3 +34,15 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ('url', 'name', 'photo', 'price', 'position_number', 'quantity')
+        widgets = {
+            'url': forms.URLInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'position_number': forms.NumberInput(attrs={'class': 'form-control'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
