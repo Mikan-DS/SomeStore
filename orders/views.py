@@ -35,6 +35,7 @@ def cart(request):
     }
     return render(request, 'orders/cart.html', context)
 
+
 @login_required
 def remove_from_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -47,6 +48,8 @@ def place_order(request):
     if order is None or order.products.count() == 0:
         return redirect('cart')
     order.saved_date = timezone.now()
+    if request.method == 'POST':
+        order.comment = request.POST.get('comment')
     order.save()
     return redirect('index')
 

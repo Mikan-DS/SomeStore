@@ -95,12 +95,12 @@
       </div>
     {% endfor %}
     <form method="POST" action="{% url 'place_order' %}">
-      {% csrf_token %}
-      <div class="form-group">
-        <label for="order_comment">Комментарий к заказу:</label>
-        <textarea name="order_comment" id="order_comment" class="form-control"></textarea>
-      </div>
-      <button type="submit" class="btn btn-success">Оформить заказ</button>
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="comment">Комментарий:</label>
+            <textarea class="form-control" rows="3" id="comment" name="comment"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Оформить заказ</button>
     </form>
   {% else %}
     <p>Корзина пуста</p>

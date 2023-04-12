@@ -5,6 +5,7 @@ from users.models import CustomUser
 class Order(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Клиент")
     saved_date = models.DateTimeField(null=True, blank=True, verbose_name='Дата сохранения')
+    comment = models.TextField(blank=True, null=True, verbose_name='Комментарий')
 
     def __str__(self):
         return f"Заказ #{self.id}: {self.user} {self.saved_date}"
