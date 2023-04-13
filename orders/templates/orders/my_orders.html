@@ -1,0 +1,61 @@
+{% extends 'orders/base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'orders/css/my_orders.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<h1>Мои заказы</h1>
+
+{% if orders %}
+<div class="list-group">
+{% for order in orders %}
+    <div class="list-group-item list-group-item-action">
+        <div class="row">
+            <div class="col-md-8">
+                <h5 class="mb-1">Заказ №{{ order.id }}</h5>
+                {% if order.comment %}
+                    <p class="mb-1">Комментарий: {{ order.comment }}</p>
+                {% endif %}
+                <p class="mb-1">Количество товаров: {{ order.products.count }}</p>
+                <p class="mb-1">Общая стоимость: {{ order.total_price }} руб.</p>
+                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#order-{{ order.id }}-products" aria-expanded="false" aria-controls="order-{{ order.id }}-products">
+                    Товары в заказе
+                </button>
+                <div class="collapse" id="order-{{ order.id }}-products">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Название</th>
+                                <th scope="col">Номер позиции</th>
+                                <th scope="col">Цена</th>
+                                <th scope="col">Количество</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for product in order.products.all %}
+                            <tr>
+                                <th scope="row">{{ product.name }}</th>
+                                <td>{{ product.position_number }}</td>
+                                <td>{{ product.price }} руб.</td>
+                                <td>{{ product.quantity }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-4 text-md-right">
+                <a href="{% url 'order' order.id %}" class="btn btn-primary">Подробнее</a>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+{% else %}
+<p>У вас нет заказов</p>
+{% endif %}
+
+{% endblock %}

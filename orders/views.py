@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db.models import Sum
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
@@ -11,6 +12,13 @@ from django.contrib.auth.decorators import login_required
 from .models import Order, Product
 from .forms import ProductForm
 
+@login_required
+def my_orders(request):
+    orders = Order.objects.filter(user=request.user, saved_date__isnull=False).order_by('-saved_date')
+
+    for order in orders:
+        order.total_price = order.products.aggregate(total=Sum('price'))['total']
+    return render(request, 'orders/my_orders.html', {'orders': orders})
 
 @login_required
 def cart(request):
