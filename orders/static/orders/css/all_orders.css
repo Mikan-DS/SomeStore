@@ -1,0 +1,30 @@
+.order-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-summary-item {
+    margin-right: 1rem;
+}
+
+.order-button {
+    background-color: #e8e8e8;
+    border: none;
+    border-radius: 0.3rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: background-color 0.2s ease-out;
+    width: 100%;
+    text-align: left;
+}
+
+.order-button:hover {
+    background-color: #dcdcdc;
+}
+
+@media screen and (min-width: 768px) {
+    .order-button {
+        width: auto;
+    }
+}

@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Sum
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
@@ -17,6 +18,16 @@ from django.shortcuts import get_object_or_404, render
 from django.db.models import Sum
 from .models import Order
 
+@login_required
+@staff_member_required
+def all_orders(request):
+    orders = Order.objects.filter(saved_date__isnull=False).order_by('-saved_date')
+    for order in orders:
+        order.total_price = order.products.aggregate(total=Sum('price'))['total']
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'orders/all_orders.html', context)
 
 @login_required
 def order_detail(request, order_id):

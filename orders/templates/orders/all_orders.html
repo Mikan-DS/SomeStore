@@ -1,0 +1,46 @@
+{% extends 'orders/base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'orders/css/all_orders.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1>Все заказы</h1>
+{% for order in orders %}
+    <button onclick="location.href='{% url 'order_moderate' order.id %}'" class="order-button">
+        <div class="order-summary">
+            <div class="order-summary-item">
+                <p>Товаров внутри:</p>
+                <p>{{ order.products.count }}</p>
+            </div>
+            <div class="order-summary-item">
+                <p>Общая стоимость:</p>
+                <p>{{ order.total_price }} руб.</p>
+            </div>
+            <div class="order-summary-item">
+                <p>Статус:</p>
+                <p>{{ order.get_status }}</p>
+            </div>
+            <div class="order-summary-item">
+                <p>Комментарий:</p>
+                <p>{{ order.comment }}</p>
+            </div>
+            <div class="order-summary-item">
+                <p>Дата сохранения:</p>
+                <p>{{ order.saved_date }}</p>
+            </div>
+            <div class="order-summary-item">
+                <p>Добавил:</p>
+                <p>{{ order.user }}</p>
+            </div>
+            {% if order.reviewed_order %}
+                <div class="order-summary-item">
+                    <p>Дата принятия решения:</p>
+                    <p>{{ order.reviewed_order.decision_date }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </button>
+{% endfor %}
+{% endblock %}
