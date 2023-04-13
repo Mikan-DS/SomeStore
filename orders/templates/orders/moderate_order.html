@@ -1,0 +1,68 @@
+{% extends 'orders/base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'orders/css/moderate_order.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h1>Модерирование заказа</h1>
+    <h2>Заказ №{{ order.id }}</h2>
+    <p>Количество товаров: {{ order.products.count }}</p>
+    <p>Общая стоимость: {{ total_price }} руб.</p>
+    <p>Статус заказа: {{ order.get_status }}</p>
+    <p>Дата сохранения: {{ order.created_date }}</p>
+    {% if reviewed_order %}
+        <p>Дата принятия решения: {{ reviewed_order.decision_date }}</p>
+        <p>Причина отклонения: {{ reviewed_order.rejection_reason }}</p>
+    {% endif %}
+    <p>Комментарий: {{ order.comment }}</p>
+
+    <h3>Товары в заказе:</h3>
+    {% for product in order.products.all %}
+        <div class="card mb-3" style="max-width: 540px;">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                  {% if product.photo %}
+                    <img class="card-img" src="{{ product.photo.url }}" alt="{{ product.name }}" style="object-fit: cover; height: 10%; width: 10%; aspect-ratio: 1 / 1; ">
+                  {% else %}
+                    <img class="card-img" src="{% static 'orders/img/nonimage.jpg' %}" alt="No image" style="object-fit: cover; height: 10%; width: 10%; aspect-ratio: 1 / 1; ">
+                  {% endif %}
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">Количество: {{ product.quantity }}</p>
+                        <p class="card-text">Цена: {{ product.price }} руб.</p>
+                        <p class="card-text">Номер позиции: {{ product.position_number }}</p>
+                        <a href="{{ product.url }}" target="_blank">Перейти на страницу товара</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="status" value="review">Отправить на рассмотрение</button>
+        <button type="submit" name="status" value="accept">Принять</button>
+        <button type="submit" name="status" value="reject">Отклонить</button>
+    </form>
+
+
+{#    {% if form.errors %}#}
+{#        <div class="alert alert-danger">#}
+{#            {% for error in form.errors %}#}
+{#                <p>{{ error }}</p>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    {% endif %}#}
+{##}
+{#    <form method="post">#}
+{#        {% csrf_token %}#}
+{#        {{ form.as_p }}#}
+{#        <button type="submit">Сохранить решение</button>#}
+{#    </form>#}
+{% endblock %}

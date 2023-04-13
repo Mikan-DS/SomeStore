@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import EmailValidator, RegexValidator, MinValueValidator
 from django.contrib.auth import get_user_model
 
-from orders.models import Product
+from orders.models import Product, ReviewedOrder
 
 CustomUser = get_user_model()
 
@@ -46,3 +46,19 @@ class ProductForm(forms.ModelForm):
             'position_number': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
             'quantity': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
         }
+
+class ReviewedOrderForm(forms.ModelForm):
+    status = forms.ChoiceField(
+        label='Статус заказа',
+        choices=(('review', "На рассмотрение"), ('approve', "Принять"), ('reject', "Отклонить"),),
+        widget=forms.RadioSelect(),
+    )
+    rejection_reason = forms.CharField(
+        label='Причина отклонения',
+        required=False,
+        widget=forms.Textarea(attrs={'rows': 3}),
+    )
+
+    class Meta:
+        model = ReviewedOrder
+        fields = ('status', 'rejection_reason')

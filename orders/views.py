@@ -7,16 +7,56 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.utils import timezone
 
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, ReviewedOrderForm
 
 from django.contrib.auth.decorators import login_required
-from .models import Order, Product
+from .models import Order, Product, ReviewedOrder
 from .forms import ProductForm
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 from django.db.models import Sum
 from .models import Order
+
+@login_required
+@staff_member_required
+def moderate_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    reviewed_order = ReviewedOrder.objects.filter(order=order).first()
+    if reviewed_order:
+        ReviewedOrder.objects.filter(order=order).delete() #TODO
+    # if request.method == 'POST':
+    #     # form = ReviewedOrderForm(request.POST)
+    #     # if form.is_valid():
+    #     #     reviewed_order = form.save(commit=False)
+    #     #     reviewed_order.order = order
+    #     #     reviewed_order.admin_user = request.user
+    #     #     reviewed_order.decision_date = timezone.now()
+    #     #     reviewed_order.save()
+    #     #     messages.success(request, 'Решение принято')
+    #     #     return redirect('orders')
+    #     if request.POST.get('status') == 'review':
+    #         if ReviewedOrder.objects.filter(order=order):
+    #             order.reviewed_order.delete()
+    #     elif request.POST.get('status') == 'accept':
+    #         rw_order, created = ReviewedOrder.objects.get_or_create(order=order)
+    #         rw_order.admin_user = request.user
+    #         rw_order.decision_date = timezone.now()
+    #         rw_order.rejection_reason = None
+    #     elif request.POST.get('status') == 'reject':
+    #         pass
+
+    # else:
+    #     form = ReviewedOrderForm()
+    total_price = order.products.aggregate(total=Sum('price'))['total']
+    context = {
+        'order': order,
+        'total_price': total_price,
+        'reviewed_order': reviewed_order,
+        # 'form': form,
+    }
+    return render(request, 'orders/moderate_order.html', context)
+
 
 @login_required
 @staff_member_required

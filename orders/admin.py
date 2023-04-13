@@ -95,7 +95,10 @@ class ReviewedOrderForm(forms.ModelForm):
 
         self.fields['rejection_reason'].initial = self.instance.rejection_reason
 
-        self.fields['approver'].initial = self.instance.admin_user
+        if hasattr(self.instance, 'admin_user'):
+            self.fields['approver'].initial = self.instance.admin_user
+        else:
+            self.fields['approver'].initial = "Еще не редактировался"
 
         self.fields['decision_date'].widget.attrs['readonly'] = True  # тут по вкусу
         self.fields['approver'].widget.attrs['readonly'] = True
