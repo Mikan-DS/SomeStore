@@ -1,0 +1,52 @@
+{% extends 'orders/base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'orders/css/order_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1>Заказ №{{ order.id }}</h1>
+    <div class="row">
+      <div class="col-md-4">
+        <p>Пользователь: {{ order.user }}</p>
+        <p>Дата сохранения: {{ order.saved_date }}</p>
+        <p>Количество товаров: {{ order.products.all|length }}</p>
+        <p>Общая стоимость: {{ total_price }}</p>
+        <p>Комментарий: {{ order.comment }}</p>
+        <p>Статус: {{ order.get_status }}</p>
+      </div>
+      <div class="col-md-8">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Название</th>
+              <th>Фото</th>
+              <th>Цена</th>
+              <th>Количество</th>
+              <th>Номер позиции</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in order.products.all %}
+              <tr>
+                <td>{{ product.name }}</td>
+                <td>
+                  {% if product.photo %}
+                    <img class="card-img" src="{{ product.photo.url }}" alt="{{ product.name }}" style="object-fit: cover; height: 30%; width: 30%; aspect-ratio: 1 / 1; ">
+                  {% else %}
+                    <img class="card-img" src="{% static 'orders/img/nonimage.jpg' %}" alt="No image" style="object-fit: cover; height: 30%; width: 30%; aspect-ratio: 1 / 1; ">
+                  {% endif %}
+                </td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.position_number }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

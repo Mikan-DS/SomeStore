@@ -14,7 +14,7 @@ urlpatterns = [
 
     path('my_orders/', views.my_orders, name='my_orders'),
 
-    path('orders/order/<int:order_id>', views.under_construction, name='order'),
+    path('orders/order/<int:order_id>', views.order_detail, name='order'),
 
     path('orders/', views.under_construction, name='orders'),
     path('moderate_orders/', views.under_construction, name='moderate_orders'),

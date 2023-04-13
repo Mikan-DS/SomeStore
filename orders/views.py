@@ -12,6 +12,23 @@ from django.contrib.auth.decorators import login_required
 from .models import Order, Product
 from .forms import ProductForm
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, render
+from django.db.models import Sum
+from .models import Order
+
+
+@login_required
+def order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    total_price = order.products.aggregate(total=Sum('price'))['total']
+    context = {
+        'order': order,
+        'total_price': total_price,
+    }
+    return render(request, 'orders/order_detail.html', context)
+
+
 @login_required
 def my_orders(request):
     orders = Order.objects.filter(user=request.user, saved_date__isnull=False).order_by('-saved_date')
