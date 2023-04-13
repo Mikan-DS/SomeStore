@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Order, Product
 from .forms import ProductForm
 
+
 @login_required
 def cart(request):
     order, created = Order.objects.get_or_create(user=request.user, saved_date=None)
@@ -22,10 +23,9 @@ def cart(request):
             product.save()
             messages.success(request, 'Товар успешно добавлен в корзину!')
             return redirect('cart')
-        elif request.POST.get("url") and len(request.POST.get("url"))>199:
+        elif request.POST.get("url") and len(request.POST.get("url")) > 199:
             messages.error(request, 'Ссылка на товар слишком длинная')
         else:
-            messages.error(request, 'Произошла ошибка при добавлении. Проверьте поля')
             form.add_error(None, 'Произошла ошибка при добавлении. Проверьте поля')
     else:
         form = ProductForm()
@@ -41,6 +41,7 @@ def remove_from_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     product.delete()
     return redirect('cart')
+
 
 @login_required
 def place_order(request):
@@ -58,6 +59,7 @@ def logout_view(request):
     logout(request)
     return redirect(reverse('index'))
 
+
 def user_login(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
@@ -68,6 +70,7 @@ def user_login(request):
     else:
         form = AuthenticationForm()
     return render(request, 'orders/login.html', {'form': form})
+
 
 def register(request):
     if request.method == 'POST':
@@ -83,8 +86,10 @@ def register(request):
         form = CustomUserCreationForm()
     return render(request, 'orders/register.html', {'form': form})
 
+
 def under_construction(request, *args, **kwargs):
     return render(request, 'orders/under_construction.html')
+
 
 def index(request):
     return render(request, 'orders/index.html')

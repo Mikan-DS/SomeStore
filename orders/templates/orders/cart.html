@@ -1,4 +1,9 @@
 {% extends 'orders/base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'orders/css/cart.css' %}">
+{% endblock %}
 
 {% block content %}
   <h1>Корзина</h1>
@@ -75,24 +80,32 @@
   <hr>
   {% if products %}
     {% for product in products %}
-      <div class="card mb-3">
-        {% if product.photo %}
-          <img class="card-img-top" src="{{ product.photo.url }}" alt="{{ product.name }}">
-        {% else %}
-          <div class="card-img-top placeholder"></div>
-        {% endif %}
-        <div class="card-body">
-          <h5 class="card-title">{{ product.name }}</h5>
-          <p class="card-text">Наименование: {{ product.name }}</p>
-          <p class="card-text">Цена: {{ product.price }} ₽</p>
-          <p class="card-text">Номер позиции: {{ product.position_number }}</p>
-          <form method="POST" action="{% url 'remove_from_cart' product.id %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Удалить</button>
-          </form>
-          <a href="{{ product.url }}" target="_blank" class="btn btn-primary mt-2">Перейти по ссылке</a>
+        <div class="card mb-3">
+          <div class="row no-gutters">
+            <div class="col-md-4">
+              {% if product.photo %}
+                <img class="card-img" src="{{ product.photo.url }}" alt="{{ product.name }}" style="object-fit: cover; height: 10%; width: 10%; aspect-ratio: 1 / 1; ">
+              {% else %}
+                <img class="card-img" src="{% static 'orders/img/nonimage.jpg' %}" alt="No image" style="object-fit: cover; height: 10%; width: 10%; aspect-ratio: 1 / 1; ">
+              {% endif %}
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <div style="float: right;">
+                  <form method="POST" action="{% url 'remove_from_cart' product.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                  </form>
+                  <a href="{{ product.url }}" target="_blank" class="btn btn-primary mt-2">Перейти по ссылке</a>
+                </div>
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text"><small class="text-muted">Цена: {{ product.price }} &#8381;</small></p>
+                <p class="card-text"><small class="text-muted">Номер позиции: {{ product.position_number }}</small></p>
+                <p class="card-text"><small class="text-muted">Количество: {{ product.quantity }}</small></p>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
     {% endfor %}
     <form method="POST" action="{% url 'place_order' %}">
         {% csrf_token %}
