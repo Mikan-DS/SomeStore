@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
-from django.core.validators import EmailValidator, RegexValidator
+from django.core.validators import EmailValidator, RegexValidator, MinValueValidator
 from django.contrib.auth import get_user_model
 
 from orders.models import Product
@@ -42,7 +42,7 @@ class ProductForm(forms.ModelForm):
         widgets = {
             'url': forms.URLInput(attrs={'class': 'form-control'}),
             'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'price': forms.NumberInput(attrs={'class': 'form-control'}),
-            'position_number': forms.NumberInput(attrs={'class': 'form-control'}),
-            'quantity': forms.NumberInput(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+            'position_number': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
         }

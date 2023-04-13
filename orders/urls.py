@@ -18,5 +18,4 @@ urlpatterns = [
     path('moderate_orders/', views.under_construction, name='moderate_orders'),
     path('archive_orders/', views.under_construction, name='archive_orders'),
 
-    path('<path:dummy>', views.under_construction, name='under_construction'),
 ]
