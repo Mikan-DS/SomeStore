@@ -18,7 +18,7 @@ urlpatterns = [
     path('moderate_orders/order/<int:order_id>', views.moderate_order, name='order_moderate'),
 
     path('orders/', views.all_orders, name='orders'),
-    path('moderate_orders/', views.under_construction, name='moderate_orders'),
-    path('archive_orders/', views.under_construction, name='archive_orders'),
+    path('moderate_orders/', views.moderate_orders, name='moderate_orders'),
+    path('archive_orders/', views.archive_orders, name='archive_orders'),
 
 ]

@@ -78,6 +78,28 @@ def all_orders(request):
     return render(request, 'orders/all_orders.html', context)
 
 @login_required
+@staff_member_required
+def moderate_orders(request):
+    orders = Order.objects.filter(saved_date__isnull=False, reviewed_order__isnull=True).order_by('-saved_date')
+    for order in orders:
+        order.total_price = order.products.aggregate(total=Sum('price'))['total']
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'orders/moderate_orders.html', context)
+
+@login_required
+@staff_member_required
+def archive_orders(request):
+    orders = Order.objects.filter(saved_date__isnull=False, reviewed_order__isnull=False).order_by('-saved_date')
+    for order in orders:
+        order.total_price = order.products.aggregate(total=Sum('price'))['total']
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'orders/archive_orders.html', context)
+
+@login_required
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     total_price = order.products.aggregate(total=Sum('price'))['total']

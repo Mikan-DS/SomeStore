@@ -7,9 +7,9 @@
 
 {% block content %}
 <div class="header-links">
-    <a href="{% url 'moderate_orders' %}">Модерация заказов</a>
     <a href="{% url 'archive_orders' %}">Архив заказов</a>
+    <a href="{% url 'orders' %}">Все заказы</a>
 </div>
-<h1>Все заказы</h1>
+<h1>Модерация заказов</h1>
 {% include 'orders/orders.html' %}
 {% endblock %}

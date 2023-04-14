@@ -1,4 +1,13 @@
-{% extends 'orders/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>{% extends 'orders/base.html' %}
 {% load static %}
 
 {% block head %}
@@ -7,9 +16,9 @@
 
 {% block content %}
 <div class="header-links">
+    <a href="{% url 'orders' %}">Все заказы</a>
     <a href="{% url 'moderate_orders' %}">Модерация заказов</a>
-    <a href="{% url 'archive_orders' %}">Архив заказов</a>
 </div>
-<h1>Все заказы</h1>
+<h1>Архив заказов</h1>
 {% include 'orders/orders.html' %}
 {% endblock %}
