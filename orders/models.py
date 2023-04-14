@@ -20,6 +20,7 @@ class Order(models.Model):
             return 'На рассмотрении'
         else:
             return reviewed_order.get_status()
+
     def get_status_tag(self):
         reviewed_order = ReviewedOrder.objects.filter(order=self).first()
         if reviewed_order is None:
@@ -56,6 +57,7 @@ class ReviewedOrder(models.Model):
             return 'Принято'
         else:
             return 'Отказано'
+
     def get_status_tag(self):
         if self.rejection_reason is None:
             return 'accepted'

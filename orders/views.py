@@ -1,31 +1,26 @@
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Sum
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+from django.db.models import Sum
+from django.shortcuts import get_object_or_404, render
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils import timezone
 
-from .forms import CustomUserCreationForm, ReviewedOrderForm
-
-from django.contrib.auth.decorators import login_required
-from .models import Order, Product, ReviewedOrder
+from .forms import CustomUserCreationForm
 from .forms import ProductForm
-
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render
-from django.db.models import Sum
 from .models import Order
+from .models import Product, ReviewedOrder
+
 
 @login_required
 @staff_member_required
 def moderate_order(request, order_id):
     order = get_object_or_404(Order, id=order_id)
 
-
     total_price = order.products.aggregate(total=Sum('price'))['total']
-
 
     if request.method == 'POST':
         reviewed_order = ReviewedOrder.objects.filter(order=order).first()
@@ -42,7 +37,9 @@ def moderate_order(request, order_id):
             decision_date = timezone.now()
             rejection_reason = None
             if reviewed_order is None:
-                reviewed_order = ReviewedOrder.objects.create(order=order, admin_user=admin_user, decision_date=decision_date, rejection_reason=rejection_reason)
+                reviewed_order = ReviewedOrder.objects.create(order=order, admin_user=admin_user,
+                                                              decision_date=decision_date,
+                                                              rejection_reason=rejection_reason)
             else:
                 reviewed_order.admin_user = admin_user
                 reviewed_order.decision_date = decision_date
@@ -51,7 +48,8 @@ def moderate_order(request, order_id):
         elif status == 'reject':
             reviewed_order = ReviewedOrder.objects.filter(order=order).first()
             if reviewed_order is None:
-                reviewed_order = ReviewedOrder.objects.create(order=order, admin_user=request.user, decision_date=timezone.now())
+                reviewed_order = ReviewedOrder.objects.create(order=order, admin_user=request.user,
+                                                              decision_date=timezone.now())
             reviewed_order.rejection_reason = request.POST.get('reason', '')
             reviewed_order.save()
     else:
@@ -65,7 +63,6 @@ def moderate_order(request, order_id):
     return render(request, 'orders/moderate_order.html', context)
 
 
-
 @login_required
 @staff_member_required
 def all_orders(request):
@@ -76,6 +73,7 @@ def all_orders(request):
         'orders': orders,
     }
     return render(request, 'orders/all_orders.html', context)
+
 
 @login_required
 @staff_member_required
@@ -88,6 +86,7 @@ def moderate_orders(request):
     }
     return render(request, 'orders/moderate_orders.html', context)
 
+
 @login_required
 @staff_member_required
 def archive_orders(request):
@@ -98,6 +97,7 @@ def archive_orders(request):
         'orders': orders,
     }
     return render(request, 'orders/archive_orders.html', context)
+
 
 @login_required
 def order_detail(request, order_id):
@@ -117,6 +117,7 @@ def my_orders(request):
     for order in orders:
         order.total_price = order.products.aggregate(total=Sum('price'))['total']
     return render(request, 'orders/my_orders.html', {'orders': orders})
+
 
 @login_required
 def cart(request):

@@ -18,6 +18,6 @@ class CustomUser(AbstractUser):
         if self.full_name:
             name, *io = self.full_name.split(" ")
             print(name, io, self.full_name.split(" "))
-            return " ".join([name]+[i[0]+"." for i in io])
+            return " ".join([name] + [i[0] + "." for i in io])
         else:
             return self.email

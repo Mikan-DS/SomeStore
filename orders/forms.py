@@ -1,12 +1,13 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.utils.translation import gettext_lazy as _
-from django.core.validators import EmailValidator, RegexValidator, MinValueValidator
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
+from django.core.validators import EmailValidator, RegexValidator
+from django.utils.translation import gettext_lazy as _
 
 from orders.models import Product, ReviewedOrder
 
 CustomUser = get_user_model()
+
 
 class CustomUserCreationForm(UserCreationForm):
     full_name = forms.CharField(max_length=255, label=_('ФИО'))
@@ -35,6 +36,7 @@ class CustomUserCreationForm(UserCreationForm):
             user.save()
         return user
 
+
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
@@ -46,6 +48,7 @@ class ProductForm(forms.ModelForm):
             'position_number': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
             'quantity': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
         }
+
 
 class ReviewedOrderForm(forms.ModelForm):
     status = forms.ChoiceField(
