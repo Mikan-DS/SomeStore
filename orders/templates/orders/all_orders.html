@@ -8,8 +8,12 @@
 {% block content %}
 <h1>Все заказы</h1>
 {% for order in orders %}
-    <button onclick="location.href='{% url 'order_moderate' order.id %}'" class="order-button">
+    <button id="order_{{ order.pk }}" onclick="location.href='{% url 'order_moderate' order.id %}'" class="order-button">
         <div class="order-summary">
+            <div class="order-summary-item">
+                <p>Заказ№</p>
+                <p>{{ order.pk }}</p>
+            </div>
             <div class="order-summary-item">
                 <p>Товаров внутри:</p>
                 <p>{{ order.products.count }}</p>
@@ -22,10 +26,12 @@
                 <p>Статус:</p>
                 <p>{{ order.get_status }}</p>
             </div>
-            <div class="order-summary-item">
-                <p>Комментарий:</p>
-                <p>{{ order.comment }}</p>
-            </div>
+            {% if order.comment %}
+                <div class="order-summary-item">
+                    <p>Комментарий:</p>
+                    <p>{{ order.comment }}</p>
+                </div>
+            {% endif %}
             <div class="order-summary-item">
                 <p>Дата сохранения:</p>
                 <p>{{ order.saved_date }}</p>
@@ -39,7 +45,19 @@
                     <p>Дата принятия решения:</p>
                     <p>{{ order.reviewed_order.decision_date }}</p>
                 </div>
+                <div class="order-summary-item">
+                    <p>Админ:</p>
+                    <p>{{ order.reviewed_order.admin_user }}</p>
+                </div>
+                {% if order.reviewed_order.rejection_reason %}
+                    <div class="order-summary-item">
+                        <p>Причина отклонения:</p>
+                        <p>{{ order.reviewed_order.rejection_reason }}</p>
+                    </div>
+                {% endif %}
+
             {% endif %}
+
         </div>
     </button>
 {% endfor %}

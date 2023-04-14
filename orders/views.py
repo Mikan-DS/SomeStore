@@ -22,40 +22,48 @@ from .models import Order
 @staff_member_required
 def moderate_order(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-    reviewed_order = ReviewedOrder.objects.filter(order=order).first()
-    if reviewed_order:
-        ReviewedOrder.objects.filter(order=order).delete() #TODO
-    # if request.method == 'POST':
-    #     # form = ReviewedOrderForm(request.POST)
-    #     # if form.is_valid():
-    #     #     reviewed_order = form.save(commit=False)
-    #     #     reviewed_order.order = order
-    #     #     reviewed_order.admin_user = request.user
-    #     #     reviewed_order.decision_date = timezone.now()
-    #     #     reviewed_order.save()
-    #     #     messages.success(request, 'Решение принято')
-    #     #     return redirect('orders')
-    #     if request.POST.get('status') == 'review':
-    #         if ReviewedOrder.objects.filter(order=order):
-    #             order.reviewed_order.delete()
-    #     elif request.POST.get('status') == 'accept':
-    #         rw_order, created = ReviewedOrder.objects.get_or_create(order=order)
-    #         rw_order.admin_user = request.user
-    #         rw_order.decision_date = timezone.now()
-    #         rw_order.rejection_reason = None
-    #     elif request.POST.get('status') == 'reject':
-    #         pass
 
-    # else:
-    #     form = ReviewedOrderForm()
+
     total_price = order.products.aggregate(total=Sum('price'))['total']
+
+
+    if request.method == 'POST':
+        reviewed_order = ReviewedOrder.objects.filter(order=order).first()
+
+        if reviewed_order:
+            ReviewedOrder.objects.filter(order=order).delete()
+        status = request.POST.get('status')
+        if status == 'review':
+            if reviewed_order:
+                reviewed_order.delete()
+                reviewed_order = None
+        elif status == 'accept':
+            admin_user = request.user
+            decision_date = timezone.now()
+            rejection_reason = None
+            if reviewed_order is None:
+                reviewed_order = ReviewedOrder.objects.create(order=order, admin_user=admin_user, decision_date=decision_date, rejection_reason=rejection_reason)
+            else:
+                reviewed_order.admin_user = admin_user
+                reviewed_order.decision_date = decision_date
+                reviewed_order.rejection_reason = rejection_reason
+                reviewed_order.save()
+        elif status == 'reject':
+            reviewed_order = ReviewedOrder.objects.filter(order=order).first()
+            if reviewed_order is None:
+                reviewed_order = ReviewedOrder.objects.create(order=order, admin_user=request.user, decision_date=timezone.now())
+            reviewed_order.rejection_reason = request.POST.get('reason', '')
+            reviewed_order.save()
+    else:
+        reviewed_order = ReviewedOrder.objects.filter(order=order).first()
     context = {
         'order': order,
         'total_price': total_price,
         'reviewed_order': reviewed_order,
-        # 'form': form,
     }
+
     return render(request, 'orders/moderate_order.html', context)
+
 
 
 @login_required

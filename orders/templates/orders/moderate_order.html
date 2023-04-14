@@ -6,17 +6,41 @@
 {% endblock %}
 
 {% block content %}
+
+    <a href="{% url 'orders' %}#order_{{ order.pk }}">Вернуться к списку заказов</a>
+
     <h1>Модерирование заказа</h1>
     <h2>Заказ №{{ order.id }}</h2>
     <p>Количество товаров: {{ order.products.count }}</p>
+    <p>Клиент: {{ order.user }}</p>
     <p>Общая стоимость: {{ total_price }} руб.</p>
     <p>Статус заказа: {{ order.get_status }}</p>
-    <p>Дата сохранения: {{ order.created_date }}</p>
+    <p>Дата сохранения: {{ order.saved_date }}</p>
     {% if reviewed_order %}
         <p>Дата принятия решения: {{ reviewed_order.decision_date }}</p>
-        <p>Причина отклонения: {{ reviewed_order.rejection_reason }}</p>
+        <p>Администратор: {{ reviewed_order.admin_user }}</p>
+        {% if reviewed_order.rejection_reason %}
+            <p>Причина отклонения: {{ reviewed_order.rejection_reason }}</p>
+        {% endif %}
     {% endif %}
     <p>Комментарий: {{ order.comment }}</p>
+
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="status" value="review">Отправить на рассмотрение</button>
+        <button type="submit" name="status" value="accept">Принять</button>
+        <button type="button" id="rejectButton">Отклонить</button>
+
+        <div id="rejectReason" style="display: none;">
+            <label for="reason">Причина отказа:</label>
+
+            <input type="text" id="reason" name="reason">
+
+            <button type="submit" name="status" value="reject">Подтвердить</button>
+        </div>
+    </form>
+
 
     <h3>Товары в заказе:</h3>
     {% for product in order.products.all %}
@@ -24,9 +48,9 @@
             <div class="row no-gutters">
                 <div class="col-md-4">
                   {% if product.photo %}
-                    <img class="card-img" src="{{ product.photo.url }}" alt="{{ product.name }}" style="object-fit: cover; height: 10%; width: 10%; aspect-ratio: 1 / 1; ">
+                    <img class="card-img" src="{{ product.photo.url }}" alt="{{ product.name }}" style="object-fit: cover; height: 30%; width: 30%; aspect-ratio: 1 / 1; ">
                   {% else %}
-                    <img class="card-img" src="{% static 'orders/img/nonimage.jpg' %}" alt="No image" style="object-fit: cover; height: 10%; width: 10%; aspect-ratio: 1 / 1; ">
+                    <img class="card-img" src="{% static 'orders/img/nonimage.jpg' %}" alt="No image" style="object-fit: cover; height: 30%; width: 30%; aspect-ratio: 1 / 1; ">
                   {% endif %}
                 </div>
 
@@ -44,25 +68,9 @@
     {% endfor %}
 
 
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" name="status" value="review">Отправить на рассмотрение</button>
-        <button type="submit" name="status" value="accept">Принять</button>
-        <button type="submit" name="status" value="reject">Отклонить</button>
-    </form>
-
-
-{#    {% if form.errors %}#}
-{#        <div class="alert alert-danger">#}
-{#            {% for error in form.errors %}#}
-{#                <p>{{ error }}</p>#}
-{#            {% endfor %}#}
-{#        </div>#}
-{#    {% endif %}#}
-{##}
-{#    <form method="post">#}
-{#        {% csrf_token %}#}
-{#        {{ form.as_p }}#}
-{#        <button type="submit">Сохранить решение</button>#}
-{#    </form>#}
+    <script>
+        document.getElementById("rejectButton").addEventListener("click", function() {
+            document.getElementById("rejectReason").style.display = 'block';
+        });
+    </script>
 {% endblock %}
