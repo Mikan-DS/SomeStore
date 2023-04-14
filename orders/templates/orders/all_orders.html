@@ -6,6 +6,10 @@
 {% endblock %}
 
 {% block content %}
+<div class="header-links">
+    <a href="{% url 'moderate_orders' %}">Модерация заказов</a>
+    <a href="{% url 'archive_orders' %}">Архив заказов</a>
+</div>
 <h1>Все заказы</h1>
 {% for order in orders %}
     <button id="order_{{ order.pk }}" onclick="location.href='{% url 'order_moderate' order.id %}'" class="order-button">
@@ -24,7 +28,7 @@
             </div>
             <div class="order-summary-item">
                 <p>Статус:</p>
-                <p>{{ order.get_status }}</p>
+                <p class="status-{{ order.get_status_tag }}">{{ order.get_status }}</p>
             </div>
             {% if order.comment %}
                 <div class="order-summary-item">

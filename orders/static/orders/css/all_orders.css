@@ -28,3 +28,28 @@
         width: auto;
     }
 }
+
+.status-accepted {
+    color: green;
+}
+.status-rejected {
+    color: red;
+}
+.status-review {
+    color: orange;
+}
+
+.header-links {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.header-links a {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+a {
+    margin-right: 20px;
+}
